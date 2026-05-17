@@ -84,9 +84,11 @@ void tipoInstruction(GameSettings * gs , char * line){
     int n = ++gs->jogo.numPilhas;
     gs->jogo.pilhas = realloc(gs->jogo.pilhas,sizeof(struct RegrasPilha)*n);
     long tag=0;
+    char * nomeDaPilha = procuraNomeString(line);
     line = criarTag(&tag,line);
     RegrasPilha * pilhaAtual = gs->jogo.pilhas + n - 1;
     pilhaAtual->tag = tag;
+    pilhaAtual->nomePilha = nomeDaPilha;
     calculaRulesPilha(pilhaAtual,line);
 }
 
@@ -121,16 +123,7 @@ void baralhoInstruction(GameSettings * gs , char * line){
 }
 
 void jogoInstruction(GameSettings * gs,char * line){
-    int i;
-    char * temp = line;
-    //Para verificar o tamanho do nome do jogo
-    for(i=0;*temp != '#' && *temp!='\n' && *temp!=' '&& *line!='\0';i++,temp++);
-    gs->jogo.nomeJogo = malloc(sizeof(char)*i + 1);
-    char * nome = gs->jogo.nomeJogo;
-    for(;*line != '#' && *line!='\n' && *line!=' ' && *line!='\0';nome++,line++){
-        *nome=*line;
-    }
-    *nome = '\0';
+    gs->jogo.nomeJogo = procuraNomeString(line);
 }
 
 

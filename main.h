@@ -72,6 +72,7 @@ typedef struct MovimentoEntrePilhas{
 
 typedef struct RegrasPilha{
     long tag; //tag da pilha dada pela soma dos caracteres ASCII
+    char * nomePilha;
     Boolean todaPilhaVisivel;
     Boolean cartaTopoVisivel;
     Boolean existeMaxCartas; // MAX cartas 1
@@ -138,6 +139,7 @@ long procuraTag(MatrizJogo * mj , int pilha);
 char convertToNaipe(int div);
 int pertenceString(char c , char str[]);
 int pilhaVaziaVerify(MatrizJogo * mj , int pilhaDest , MovimentoEntrePilhas * mov);
+char * procuraNomeString(char * line);
 
 
 //Modulo flagFunctions.c

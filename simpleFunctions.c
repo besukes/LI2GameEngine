@@ -1,6 +1,6 @@
 #include "main.h"
 #include <stdio.h>
-
+#include <stdlib.h>
 
 int valorCarta(int c){
     for(;c>13;c-=13);
@@ -25,6 +25,20 @@ char * criarTag(long * tag,char * line){
         j++;
     }
     return (line+1);
+}
+
+char * procuraNomeString(char * line){
+    int i;
+    char * temp = line , * nome = NULL , * head;
+    //Para verificar o tamanho do nome do jogo
+    for(i=0;*temp != '#' && *temp!='\n' && *temp!=' '&& *line!='\0';i++,temp++);
+    nome = malloc(sizeof(char)*i + 1);
+    head = nome;
+    for(;*line != '#' && *line!='\n' && *line!=' ' && *line!='\0';nome++,line++){
+        *nome=*line;
+    }
+    *nome = '\0';
+    return head;
 }
 
 
