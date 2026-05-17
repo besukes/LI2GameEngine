@@ -32,8 +32,8 @@ void addMovInstruction(MovimentoEntrePilhas * mov,long tagDestino , char * line)
     while(*line != '#' && *line!='\n' && *line!=' '&& *line!='\0'){
         int u = initEVerificaTipoFlag(mov,line);
         int n1= mov->numMovsC , n2 = mov->numMovsP;
-        if(u==1) (mov->arrP + n1 - 1)->flagsPegavel[mov->arrP->numFlagsPegavel ++] = flagPegavelCalc(line);
-        else if(u==2)  (mov->arrC + n2 - 1)->flagsColocavel[mov->arrC->numFlagsColocavel ++] = flagColocavelCalc(line);
+        if(u==1) (mov->arrP + n2 - 1)->flagsPegavel[mov->arrP->numFlagsPegavel ++] = flagPegavelCalc(line);
+        else if(u==2)  (mov->arrC + n1 - 1)->flagsColocavel[mov->arrC->numFlagsColocavel ++] = flagColocavelCalc(line);
         else if(u==3) (mov->arrP + n2 - 1)->flagRestricoes[mov->arrP->numRestricoes ++] = flagRestricoesCalc(line);
         else if(u==4) mov->colocaEmPilhaVazia = &pilhaVazia;
         line++;

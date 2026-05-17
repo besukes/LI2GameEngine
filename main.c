@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "main.h"
 
 // cores basicas so para este ficheiro
@@ -49,12 +50,12 @@ void gameLoop(GameSettings * gs , MatrizJogo * mj,LastMoveLL * undoState){
 
 
 int main(void){
+    srand(time(NULL));
     splashScreen();
     GameSettings currentGame = initStructs();
     MatrizJogo mj = initMatrizJogo();
     LastMoveLL undoState = NULL;
     int notSuccess = readFiles(&currentGame,&mj);
-    printf("nBaralhos %d",currentGame.numBaralhos );
     if(notSuccess){
         printf(RED "ERRO! Ficheiro nao encontrado ou invalido.\n" RESET);
         return 1;

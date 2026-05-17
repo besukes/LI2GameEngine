@@ -5,7 +5,7 @@
 void freeMatrizJogo(MatrizJogo mj){
     int p = mj.numLinhasMatriz;
     for(int i=0;i<p;i++){
-        free( (mj.linhasMatriz + i)->cartasPilha);
+        free((mj.linhasMatriz + i)->cartasPilha);
     }
     free(mj.linhasMatriz);
 }

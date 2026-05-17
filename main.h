@@ -137,7 +137,7 @@ MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,long tagOrig , lo
 long procuraTag(MatrizJogo * mj , int pilha);
 char convertToNaipe(int div);
 int pertenceString(char c , char str[]);
-
+int pilhaVaziaVerify(MatrizJogo * mj , int pilhaDest , MovimentoEntrePilhas * mov);
 
 
 //Modulo flagFunctions.c

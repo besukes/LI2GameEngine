@@ -40,7 +40,7 @@ int numCaracteres(char * line){
 int strToNumber(char * line){
     int i=numCaracteres(line) , num = 0;
     while(i > (-1) && *line != '#' && *line!='\n' && *line!=' ' && *line != '\0'){
-        num = (*line-48)*exponenciacao(10,i);
+        num += (*line-48)*exponenciacao(10,i);
         i--;
         line++;
     }
@@ -103,3 +103,11 @@ int pertenceString(char c , char str[]){
     return 0;
 }
 
+
+int pilhaVaziaVerify(MatrizJogo * mj , int pilhaDest , MovimentoEntrePilhas * mov){
+    int n = mj->numLinhasMatriz;
+    int colocaVazia = mov!=NULL && mov->colocaEmPilhaVazia != NULL ;
+    int pilhaVazia = (mj->linhasMatriz + pilhaDest)->numCartasPilha == 0 ;
+    int pilhaValida = n > pilhaDest && n > 0 ;
+    return(pilhaValida && pilhaVazia && colocaVazia);
+}

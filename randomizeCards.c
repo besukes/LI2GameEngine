@@ -4,7 +4,8 @@
 
 void initMatrizCartasJogo(int arrayCartas[],MatrizJogo * mj){
     int i,j,counter=0;
-    for(i=0;i<mj->numLinhasMatriz;i++){
+    int n = mj->numLinhasMatriz;
+    for(i=0;i<n;i++){
         PilhaDeCartas * p = mj->linhasMatriz + i;
         int maxPilha = p->numCartasPilha;
         for(j=0 ;j  < maxPilha ; j++ , counter++){
@@ -17,9 +18,8 @@ void initMatrizCartasJogo(int arrayCartas[],MatrizJogo * mj){
 
 
 void shuffleArray(int arrayCartas[] , int n){
-    srand(time(NULL));
-    for(int i = 0 ; i < n-1 ; i++){
-        int j = rand() % 52;
+    for(int i = 0 ; i < n*52 ; i++){
+        int j = rand() % (n*52);
         int temp = arrayCartas[i];
         arrayCartas[i] = arrayCartas[j];
         arrayCartas[j] = temp;
@@ -27,13 +27,13 @@ void shuffleArray(int arrayCartas[] , int n){
 }
 
 void initArrCartas(int arrCartas[] , int n){
-    for(int i=0;i<n;i++){
+    for(int i=0;i<n*52;i++){
         arrCartas[i] = i + 1;
     }
 }
 
 void randomizaJogo(GameSettings * gs , MatrizJogo * mj){
-    int n = gs->numBaralhos , arrCartas[n];
+    int n = gs->numBaralhos , arrCartas[n*52];
     initArrCartas(arrCartas,n);
     shuffleArray(arrCartas,n);
     initMatrizCartasJogo(arrCartas,mj);

@@ -71,11 +71,11 @@ int mesmoNaipe(Carta carta1,Carta carta2){
 }
 
 int flagCrescente(Carta carta1,Carta carta2){
-    return (carta1.valor-carta2.valor == (-1));
+    return (carta1.valor - carta2.valor == -1);
 }
 
 int flagDecrescente(Carta carta1,Carta carta2){
-    return (carta1.valor-carta2.valor == 1);
+    return (carta1.valor - carta2.valor == 1);
 }
 int flagDifpor1(Carta carta1 , Carta carta2){
     return(carta1.valor-carta2.valor == 1 || carta1.valor-carta2.valor == (-1));
@@ -162,10 +162,10 @@ FlagFunctionsP flagColocavelCalcAux(char * line){
 
 FlagFunctionsC flagColocavelCalc(char * line){
     switch(*line){
-        case '<' :
+        case '>' :
             return &flagCrescente;
         break;
-        case '>' :
+        case '<' :
             return &flagDecrescente;
         break;
         case '~' :

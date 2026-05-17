@@ -7,10 +7,11 @@ void efetuaAutoJogada(GameSettings * gs,MatrizJogo * mj,LastMoveLL * lm){ //NECE
 }
 
 int verifyColocarCartas(MovimentoEntrePilhas * mov , Carta * ultimaCartaOrig , Carta * cartaDest){
-    int valido = 1 , n = mov->numMovsC;
+    int valido = 0 , n = mov->numMovsC;
     ArrayFlagsColocar * arr = mov->arrC;
-    for(int i=0;i<n && arr != NULL && valido == 1;i++,arr++){
+    for(int i=0;i<n && arr != NULL && valido == 0;i++,arr++){
         int k = arr->numFlagsColocavel;
+        valido=1;
         for(int j=0;j<k && valido == 1;j++){
             int (*func)(Carta,Carta) = arr->flagsColocavel[j];
             valido = valido && func(*ultimaCartaOrig,*cartaDest);
@@ -21,13 +22,14 @@ int verifyColocarCartas(MovimentoEntrePilhas * mov , Carta * ultimaCartaOrig , C
 
 
 int validaCondicoes(ArrayFlagsPegar * arr , PilhaDeCartas * p , int num){
-    int i = p->numCartasPilha , lim = i-num + 1 , max = arr->numFlagsPegavel ,
+    int i = p->numCartasPilha - 1, lim = i-num + 1 , max = arr->numFlagsPegavel ,
+        verify = 0;
+    for(;i>=lim && verify == 0;i--){
         verify = 1;
-    for(;i>lim && verify == 1;i--){
         for(int j=0;j<max && verify == 1;j++){
             int (*func)(Carta,Carta) = arr->flagsPegavel[j];
-            if(num>1 && !arr->variasCartasMoviveis) verify = 0;
-            verify = verify && func(*(p->cartasPilha + i),*(p->cartasPilha + i - 1));
+            if(num > 1 && !arr->variasCartasMoviveis) verify = 0;
+            verify = verify && func(*(p->cartasPilha + i - 1),*(p->cartasPilha + i));
         }
     }
     return verify;
@@ -52,14 +54,17 @@ int verificaPegarCartasValido(MovimentoEntrePilhas * mov , PilhaDeCartas * p, in
 }
 
 
+
 PossiveisJogadas jogadaValida(MovimentoEntrePilhas * mov , MatrizJogo * mj , int pilha1 , int pilha2 , int num){
     if(mov==NULL) return invalid;
     PilhaDeCartas * pilhaOrig = (mj->linhasMatriz + pilha1) , * pilhaDest = (mj->linhasMatriz + pilha2);
     if(pilhaOrig->numCartasPilha < num ) return invalid;
     Boolean validoPegavel = verificaPegarCartasValido(mov,pilhaOrig,num,mj,pilha1) , validoColocavel = 0;
-    int norig = pilhaOrig->numCartasPilha - 1, ndest = pilhaDest->numCartasPilha - 1;
+    int norig = pilhaOrig->numCartasPilha
+        ,ndest = pilhaDest->numCartasPilha - 1;
     if(validoPegavel){
-        validoColocavel = verifyColocarCartas(mov,pilhaOrig->cartasPilha + norig - num,pilhaDest->cartasPilha + ndest);
+        validoColocavel = pilhaVaziaVerify(mj,pilha2,mov)
+            || verifyColocarCartas(mov,pilhaOrig->cartasPilha + norig - num,pilhaDest->cartasPilha + ndest);
     }
     if(validoColocavel && validoPegavel) return valid;
     else return invalid;
@@ -70,10 +75,10 @@ void handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , i
     PilhaDeCartas * pilhaDest = mj->linhasMatriz + pilha2,
                   * pilhaOrig = mj->linhasMatriz + pilha1;
     int numAnt = pilhaDest->numCartasPilha , numNovaPilha = numAnt + numCartas , 
-        numOrig = pilhaDest->numCartasPilha - numCartas;
+        numOrig = pilhaOrig->numCartasPilha - numCartas;
     pilhaDest->numCartasPilha +=numCartas;
     pilhaDest->cartasPilha = realloc(pilhaDest->cartasPilha,sizeof(struct PilhaDeCartas)*numNovaPilha);
-    for(int i=numAnt,j= numOrig;i<numNovaPilha;i++,j++){
+    for(int i=numAnt,j = numOrig ; i<numNovaPilha ;i++,j++){
         *(pilhaDest->cartasPilha + i) = *(pilhaOrig->cartasPilha + j);
     }
     headLinkedList(lm,pilha1,pilha2,numCartas,*mj);
@@ -83,7 +88,7 @@ void handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , i
 
 
 PossiveisJogadas efetuaJogadaMovimentoCartas(GameSettings * gs , MatrizJogo * mj , LastMoveLL * undoState){
-    int pilha1 , pilha2 , numCartas;
+    int pilha1 = 0, pilha2 = 0, numCartas = 0;
     PossiveisJogadas estadoJogada = valid;
     pedeJogadaUtilizador(&pilha1,&pilha2,&numCartas);
     long tag1 = procuraTag(mj,pilha1) , tag2 = procuraTag(mj,pilha2);
