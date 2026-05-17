@@ -30,7 +30,7 @@
 // -------------------------------------------------------
 
 // limpa o ecra
-void clearScreen() {
+void clearScreen(void) {
     printf("\033[2J\033[H");
 }
 
@@ -258,7 +258,7 @@ void desenhaInterfaceJogo(GameSettings * gs, MatrizJogo mj) {
 // menu principal (antes do jogo comecar)
 // -------------------------------------------------------
 
-void desenhaMenuPrincipal() {
+void desenhaMenuPrincipal(void) {
     clearScreen();
 
     printf("\n");
@@ -293,7 +293,7 @@ void desenhaMenuPrincipal() {
 // mensagem de vitoria (animada de forma simples)
 // -------------------------------------------------------
 
-void animacaoVitoria() {
+void animacaoVitoria(void) {
     clearScreen();
     printf("\n\n\n");
 
@@ -325,7 +325,7 @@ void animacaoVitoria() {
 }
 
 // mensagem de derrota / desistencia
-void mensagemSaida() {
+void mensagemSaida(void) {
     printf("\n");
     printf(MAGENTA BOLD);
     printCentered("Maior sorte para a proxima!!", TERMINAL_WIDTH);
@@ -336,7 +336,7 @@ void mensagemSaida() {
 }
 
 // aviso de jogada invalida - simples
-void avisaJogadaInvalida() {
+void avisaJogadaInvalida(void) {
     printf(RED "  >> Jogada invalida! Tenta outra vez.\n" RESET);
     usleep(600000); // deixa ver a mensagem um bocado
 }
