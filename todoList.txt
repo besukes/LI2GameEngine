@@ -1,44 +1,23 @@
 ------------------------------------------------------------TO DO LIST-----------------------------------------------
-2---shuffle cards no randomizeCards.c
-3---Salvar o jogo
-4---userInterface.c (tudo)
-6-- fazer jogadaValida
-9-- FGETS ATUALIZA LINHA??
-10-- INIT MATRIZ 
-11 -- efetuaAutoJogada ->modulo gameplayHandle.c
-1-- PROBLEMAS INSTRUCTIONS MOVS E INITS
-
-
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////////FUNCOES INUTILIZADAS//////////////////////////////////////////////////
-void autoMovesCalc(AutoMoves * am , char * line){
-    
+1---Salvar o jogo
+2---userInterface.c{
+    reduzir instrucoes
+    define de cores pode se utilizar??
+    desenhar as pilhas tendo em conta as condicoes da pilha
+    desenhar o nome das pilhas (ainda nao da)
+    fazer aparecer quando a jogada é invalida
+    as cartas do jogo aparecem logo depois do gajo introduzir o ficheiro (neste momento tens que inserir uma jogada primeiro)
 }
+3-- Fazer undoMOVE
+4-- Fazer testes CUnit
+5 -- efetuaAutoJogada ->modulo gameplayHandle.c
 
-void autoInstruction(GameSettings * gs , char * line){
-    int n = ++(gs->jogo.qntdAutoMoves);
-    long tagOrig=0,tagDest=0;
-    line=criarTag(&tagOrig,line);
-    line=criarTag(&tagDest,line);
-    AutoMoves * am = comparaTags(am,tagOrig,tagDest);
-    if(am==NULL){
-        gs->jogo.autoMoves = realloc(gs->jogo.autoMoves,sizeof(AutoMoves)*n);
-        am = gs->jogo.autoMoves + n -1;
-        inicializaAutoMoves(am,tagOrig,tagDest);
-    }
-    else{
-        am->numMovs++;
-        inicializaAutoMoves(am,tagOrig,tagDest);
-    }
-    autoMovesCalc(am,line); // NECESSITO FAZER ESTA FUNCAO AINDA NAO ESTA FEITA
-}
+
+
+
+
+
+
+
+
+
