@@ -2,9 +2,9 @@
 #include <stdlib.h>
 
 void initializeBothArrays(MovimentoEntrePilhas * mov){
-    int n = ++mov->numMovs;
+    int n = mov->numMovs;
     mov->arrC = realloc(mov->arrC,sizeof(struct FlagFuncArrayC)*n);
-    mov->arrP = realloc(mov->arrP , sizeof(struct FlagFuncArrayP)*n);
+    mov->arrP = realloc(mov->arrP,sizeof(struct FlagFuncArrayP)*n);
     ArrayFlagsColocar * arrC = mov->arrC + n - 1;
     ArrayFlagsPegar * arrP = mov->arrP + n - 1;
     arrC->numFlagsColocavel=0;

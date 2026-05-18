@@ -8,9 +8,11 @@ void efetuaAutoJogada(GameSettings * gs,MatrizJogo * mj,LastMoveLL * lm){ //NECE
 
 int verifyColocarCartas(ArrayFlagsColocar * arr , Carta * ultimaCartaOrig , Carta * cartaDest){
     int valido = 1 , k = arr->numFlagsColocavel , j = 0;
+    if(k == 0) return 0;
     while(j<k && valido == 1){
-        int (*func)(Carta,Carta) = arr->flagsColocavel[j++];
+        int (*func)(Carta,Carta) = arr->flagsColocavel[j];
         if (func != NULL) valido = valido && func(*cartaDest,*ultimaCartaOrig);
+        j++;
     }
     return valido;
 }

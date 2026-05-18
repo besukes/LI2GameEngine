@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 
-int verificaTipoFlag(MovimentoEntrePilhas * mov , char * line){
-    char str1[] = "+*[]mxcd" , str2[]= "<>MXCD" , str3[] = "aAkK";
+int verificaTipoFlag(char * line){
+    char str1[9] = "+*[]mxcd" , str2[7]= "<>MXCD" , str3[5] = "aAkK";
     if(pertenceString(*line,str1)){
         return 1;
     }
@@ -22,13 +22,14 @@ int verificaTipoFlag(MovimentoEntrePilhas * mov , char * line){
 
 
 void addMovInstruction(MovimentoEntrePilhas * mov,long tagDestino , char * line){
+    mov->numMovs++;
     initializeBothArrays(mov);
-    while(*line != '#' && *line!='\n' && *line!=' '&& *line!='\0'){
-        int u = verificaTipoFlag(mov,line);
+    while(*line != '#' && *line!='\n' && *line!=' ' && *line!='\0'){
+        int u = verificaTipoFlag(line);
         int n = mov->numMovs;
-        if(u==1) (mov->arrP + n - 1)->flagsPegavel[mov->arrP->numFlagsPegavel ++] = flagPegavelCalc(mov,line);
-        else if(u==2)  (mov->arrC + n - 1)->flagsColocavel[mov->arrC->numFlagsColocavel ++] = flagColocavelCalc(line);
-        else if(u==3) (mov->arrP + n - 1)->flagRestricoes[mov->arrP->numRestricoes ++] = flagRestricoesCalc(line);
+        if(u==1) (mov->arrP + n - 1)->flagsPegavel[mov->arrP->numFlagsPegavel++] = flagPegavelCalc(mov,line);
+        else if(u==2)  (mov->arrC + n - 1)->flagsColocavel[mov->arrC->numFlagsColocavel++] = flagColocavelCalc(line);
+        else if(u==3) (mov->arrP + n - 1)->flagRestricoes[mov->arrP->numRestricoes++] = flagRestricoesCalc(line);
         else if(u==4) mov->colocaEmPilhaVazia = &pilhaVazia;
         line++;
     }
@@ -62,7 +63,7 @@ void autoInstruction(GameSettings * gs, char * line)
     line = criarTag(&tagDestino , line);
     int n = ++gs->jogo.qntdAutoMoves;
     //Agora line aponta para as flags
-    AutoMoves * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,n);
+    AutoMoves * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,n-1);
     if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
         gs->jogo.autoMoves = realloc(gs->jogo.movimentoPilhas,sizeof(struct MovimentoEntrePilhas)*n);
         existeregra = gs->jogo.autoMoves + n - 1;
