@@ -14,7 +14,7 @@ int verifyColocarCartas(MovimentoEntrePilhas * mov , Carta * ultimaCartaOrig , C
         valido=1;
         for(int j=0;j<k && valido == 1;j++){
             int (*func)(Carta,Carta) = arr->flagsColocavel[j];
-            valido = valido && func(*ultimaCartaOrig,*cartaDest);
+            valido = valido && func(*cartaDest,*ultimaCartaOrig);
         }
     }
     return valido;
@@ -24,7 +24,7 @@ int verifyColocarCartas(MovimentoEntrePilhas * mov , Carta * ultimaCartaOrig , C
 int validaCondicoes(ArrayFlagsPegar * arr , PilhaDeCartas * p , int num){
     int i = p->numCartasPilha - 1, lim = i-num + 1 , max = arr->numFlagsPegavel ,
         verify = 0;
-    for(;i>=lim && verify == 0;i--){
+    for(;i>lim && verify == 0;i--){
         verify = 1;
         for(int j=0;j<max && verify == 1;j++){
             int (*func)(Carta,Carta) = arr->flagsPegavel[j];
@@ -36,12 +36,12 @@ int validaCondicoes(ArrayFlagsPegar * arr , PilhaDeCartas * p , int num){
 }
 
 int validaRestricoes(ArrayFlagsPegar * arr , MatrizJogo * mj , int pilha1){
-    int lim = arr->numRestricoes , valid = 1;
+    int lim = arr->numRestricoes , valido = 1;
     for(int i=0;i<lim && valid == 1;i++){
         int (*func)(int,MatrizJogo *) = arr->flagRestricoes[i];
-        valid = valid && func(pilha1,mj);
+        valido = valido && func(pilha1,mj);
     }
-    return valid;
+    return valido;
 }
 
 int verificaPegarCartasValido(MovimentoEntrePilhas * mov , PilhaDeCartas * p, int num , MatrizJogo * mj , int pilha1){
@@ -58,7 +58,6 @@ int verificaPegarCartasValido(MovimentoEntrePilhas * mov , PilhaDeCartas * p, in
 PossiveisJogadas jogadaValida(MovimentoEntrePilhas * mov , MatrizJogo * mj , int pilha1 , int pilha2 , int num){
     if(mov==NULL) return invalid;
     PilhaDeCartas * pilhaOrig = (mj->linhasMatriz + pilha1) , * pilhaDest = (mj->linhasMatriz + pilha2);
-    if(pilhaOrig->numCartasPilha < num ) return invalid;
     Boolean validoPegavel = verificaPegarCartasValido(mov,pilhaOrig,num,mj,pilha1) , validoColocavel = 0;
     int norig = pilhaOrig->numCartasPilha
         ,ndest = pilhaDest->numCartasPilha - 1;
@@ -86,13 +85,18 @@ void handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , i
     pilhaOrig->cartasPilha = realloc(pilhaOrig->cartasPilha,sizeof(struct PilhaDeCartas)*numOrig);
 }
 
+PossiveisJogadas verificaValidadeDados(int pilha1,int pilha2,int num,MatrizJogo * mj){
+    int max = mj->numLinhasMatriz;
+    if(pilha1>=max || pilha2>=max || (mj->linhasMatriz + pilha1)->numCartasPilha < num) return invalid;
+    else return valid;
+}
 
 PossiveisJogadas efetuaJogadaMovimentoCartas(GameSettings * gs , MatrizJogo * mj , LastMoveLL * undoState){
     int pilha1 = 0, pilha2 = 0, numCartas = 0;
-    PossiveisJogadas estadoJogada = valid;
     pedeJogadaUtilizador(&pilha1,&pilha2,&numCartas);
+    PossiveisJogadas estadoJogada = verificaValidadeDados(pilha1,pilha2,numCartas,mj);
     long tag1 = procuraTag(mj,pilha1) , tag2 = procuraTag(mj,pilha2);
-    if(tag1!=(-1) && tag2!=(-1)){
+    if(tag1!=(-1) && tag2!=(-1) && estadoJogada == valid){
         MovimentoEntrePilhas * mov = comparaTags(gs->jogo.movimentoPilhas,tag1,tag2,gs->jogo.numCondicoesMov);
         estadoJogada = jogadaValida(mov,mj,pilha1,pilha2,numCartas);
         if(estadoJogada == valid){
