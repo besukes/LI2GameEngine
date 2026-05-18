@@ -145,7 +145,7 @@ char * procuraNomeString(char * line);
 int pilhaVazia(int linha,MatrizJogo * m);
 FlagFunctionsC flagColocavelCalc(char * line);
 FlagFunctionsP flagColocavelCalcAux(char * line);
-FlagFunctionsP flagPegavelCalc(char * line);
+FlagFunctionsP flagPegavelCalc(MovimentoEntrePilhas * mov ,char * line);
 FlagFunctionsP flagPegavelCalcAux(char * line);
 FlagFunctionsR flagRestricoesCalc(char * line);
 
