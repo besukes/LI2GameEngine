@@ -33,8 +33,8 @@ PossiveisJogadas interfacePessoaJogo(GameSettings * gs , MatrizJogo * mj ,LastMo
 void gameLoop(GameSettings * gs , MatrizJogo * mj,LastMoveLL * undoState){
     PossiveisJogadas option = valid;
     while(option != quit && option != GameWon ){
-        option = interfacePessoaJogo(gs,mj,undoState);
         desenhaInterfaceJogo(gs,*mj);
+        option = interfacePessoaJogo(gs,mj,undoState);
     }
     if(option==GameWon){
         animacaoVitoria();

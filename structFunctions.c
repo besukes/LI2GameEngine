@@ -1,18 +1,13 @@
 #include "main.h"
 #include <stdlib.h>
 
-
-void initArrC(MovimentoEntrePilhas * mov){
-    int n = mov->numMovsC;
+void initializeBothArrays(MovimentoEntrePilhas * mov){
+    int n = mov->numMovs;
     mov->arrC = realloc(mov->arrC,sizeof(struct FlagFuncArrayC)*n);
-    ArrayFlagsColocar * arrC = mov->arrC + n - 1;
-    arrC->numFlagsColocavel=0;
-}
-
-void initArrP(MovimentoEntrePilhas * mov){
-    int n = mov->numMovsP;
     mov->arrP = realloc(mov->arrP , sizeof(struct FlagFuncArrayP)*n);
+    ArrayFlagsColocar * arrC = mov->arrC + n - 1;
     ArrayFlagsPegar * arrP = mov->arrP + n - 1;
+    arrC->numFlagsColocavel=0;
     arrP->numFlagsPegavel = 0;
     arrP->numRestricoes = 0;
     arrP->variasCartasMoviveis = 0;

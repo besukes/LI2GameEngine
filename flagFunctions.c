@@ -128,9 +128,13 @@ FlagFunctionsP flagPegavelCalcAux(char * line){
     }
 }
 
-FlagFunctionsP flagPegavelCalc(char * line){
+FlagFunctionsP flagPegavelCalc(MovimentoEntrePilhas * mov ,char * line){
     switch(*line){
         case '*' :
+            return &sempreMovivel;
+        break;
+        case '+' :
+            (mov->arrP + mov->numMovs - 1)-> variasCartasMoviveis = 1;
             return &sempreMovivel;
         break;
         case '[' :

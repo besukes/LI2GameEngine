@@ -6,35 +6,29 @@
 
 
 int initEVerificaTipoFlag(MovimentoEntrePilhas * mov , char * line){
-    char str1[8] = "*[]mxcd" , str2[7]= "<>MXCD" , str3[5] = "aAkK";
+    char str1[9] = "+*[]mxcd" , str2[7]= "<>MXCD" , str3[5] = "aAkK";
     if(pertenceString(*line,str1)){
-        mov->numMovsP++;
-        initArrP(mov);
         return 1;
     }
-    else{
-        if(pertenceString(*line,str2)){
-            mov->numMovsC++;
-            initArrC(mov);
+    else if(pertenceString(*line,str2)){
             return 2;
-        }
-        else if(pertenceString(*line,str3)){
-            mov->numMovsP++;
-            initArrP(mov);
-            return 3;
-        }
-        else return 4;
     }
+    else if(pertenceString(*line,str3)){
+            return 3;
+    }
+    else return 4;
 }
 
 
+
 void addMovInstruction(MovimentoEntrePilhas * mov,long tagDestino , char * line){
+    initializeBothArrays(mov);
     while(*line != '#' && *line!='\n' && *line!=' '&& *line!='\0'){
-        int u = initEVerificaTipoFlag(mov,line);
-        int n1= mov->numMovsC , n2 = mov->numMovsP;
-        if(u==1) (mov->arrP + n2 - 1)->flagsPegavel[mov->arrP->numFlagsPegavel ++] = flagPegavelCalc(line);
-        else if(u==2)  (mov->arrC + n1 - 1)->flagsColocavel[mov->arrC->numFlagsColocavel ++] = flagColocavelCalc(line);
-        else if(u==3) (mov->arrP + n2 - 1)->flagRestricoes[mov->arrP->numRestricoes ++] = flagRestricoesCalc(line);
+        int u = verificaTipoFlag(mov,line);
+        int n = mov->numMovs;
+        if(u==1) (mov->arrP + n - 1)->flagsPegavel[mov->arrP->numFlagsPegavel ++] = flagPegavelCalc(mov,line);
+        else if(u==2)  (mov->arrC + n - 1)->flagsColocavel[mov->arrC->numFlagsColocavel ++] = flagColocavelCalc(line);
+        else if(u==3) (mov->arrP + n - 1)->flagRestricoes[mov->arrP->numRestricoes ++] = flagRestricoesCalc(line);
         else if(u==4) mov->colocaEmPilhaVazia = &pilhaVazia;
         line++;
     }
@@ -51,8 +45,7 @@ void movInstruction(GameSettings * gs, char * line)
     if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
         gs->jogo.movimentoPilhas = realloc(gs->jogo.movimentoPilhas,sizeof(struct MovimentoEntrePilhas)*n);
         existeregra = gs->jogo.movimentoPilhas + n - 1;
-        existeregra->numMovsC = 0;
-        existeregra->numMovsP=0;
+        existeregra->numMovs = 0;
         existeregra->tagOrig = tagOrigem;
         existeregra->tagDest = tagDestino;
         existeregra->colocaEmPilhaVazia = NULL;
@@ -71,8 +64,7 @@ void autoInstruction(GameSettings * gs, char * line)
     if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
         gs->jogo.autoMoves = realloc(gs->jogo.movimentoPilhas,sizeof(struct MovimentoEntrePilhas)*n);
         existeregra = gs->jogo.autoMoves + n - 1;
-        existeregra->numMovsC = 0;
-        existeregra->numMovsP=0;
+        existeregra->numMovs = 0;
         existeregra->tagOrig = tagOrigem;
         existeregra->tagDest = tagDestino;
         existeregra->colocaEmPilhaVazia = NULL;

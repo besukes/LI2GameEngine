@@ -60,10 +60,9 @@ typedef struct FlagFuncArrayC{
 typedef struct MovimentoEntrePilhas{
     long tagOrig; //Pilha de onde vem cas cartas
     long tagDest; //Pilha onde vao parar as cartas
-    int numMovsP; //Num de movs que condicionam pegar cartas
+    int numMovs; //Num de movs que ja foram feitos
     //Array de um struct que guarda as condicoes de pegar Cartas de uma dada pilha
     ArrayFlagsPegar * arrP;
-    int numMovsC; //Num de movs que condicionam a colocação de cartas
     //Array de um struct que guarda o numero de funcoes de um dado movimento de pilhas
     ArrayFlagsColocar * arrC;
     FlagFunctionsV colocaEmPilhaVazia;
