@@ -48,7 +48,6 @@ void gameLoop(GameSettings * gs , MatrizJogo * mj,LastMoveLL * undoState){
     }
 }
 
-
 int main(void){
     srand(time(NULL));
     splashScreen();

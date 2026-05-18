@@ -6,16 +6,11 @@ void efetuaAutoJogada(GameSettings * gs,MatrizJogo * mj,LastMoveLL * lm){ //NECE
 
 }
 
-int verifyColocarCartas(MovimentoEntrePilhas * mov , Carta * ultimaCartaOrig , Carta * cartaDest){
-    int valido = 0 , n = mov->numMovsC;
-    ArrayFlagsColocar * arr = mov->arrC;
-    for(int i=0;i<n && arr != NULL && valido == 0;i++,arr++){
-        int k = arr->numFlagsColocavel;
-        valido=1;
-        for(int j=0;j<k && valido == 1;j++){
-            int (*func)(Carta,Carta) = arr->flagsColocavel[j];
-            valido = valido && func(*cartaDest,*ultimaCartaOrig);
-        }
+int verifyColocarCartas(ArrayFlagsColocar * arr , Carta * ultimaCartaOrig , Carta * cartaDest){
+    int valido = 1 , k = arr->numFlagsColocavel , j = 0;
+    while(j<k && valido == 1){
+        int (*func)(Carta,Carta) = arr->flagsColocavel[j++];
+        if (func != NULL) valido = valido && func(*cartaDest,*ultimaCartaOrig);
     }
     return valido;
 }
@@ -44,13 +39,9 @@ int validaRestricoes(ArrayFlagsPegar * arr , MatrizJogo * mj , int pilha1){
     return valido;
 }
 
-int verificaPegarCartasValido(MovimentoEntrePilhas * mov , PilhaDeCartas * p, int num , MatrizJogo * mj , int pilha1){
-    int valido = 0 , n = mov->numMovsP;
-    ArrayFlagsPegar * arr = mov->arrP;
-    for(int i=0;i<n && arr != NULL && valido == 0;i++,arr++){
-        valido = validaCondicoes(arr,p,num) && validaRestricoes(arr,mj,pilha1);
-    }
-    return valido;
+int verificaPegarCartasValido(ArrayFlagsPegar * arr , PilhaDeCartas * p, int num , MatrizJogo * mj , int pilha1){
+    if(num==1) return 1;
+    else return (validaCondicoes(arr,p,num) && validaRestricoes(arr,mj,pilha1));
 }
 
 
@@ -58,14 +49,21 @@ int verificaPegarCartasValido(MovimentoEntrePilhas * mov , PilhaDeCartas * p, in
 PossiveisJogadas jogadaValida(MovimentoEntrePilhas * mov , MatrizJogo * mj , int pilha1 , int pilha2 , int num){
     if(mov==NULL) return invalid;
     PilhaDeCartas * pilhaOrig = (mj->linhasMatriz + pilha1) , * pilhaDest = (mj->linhasMatriz + pilha2);
-    Boolean validoPegavel = verificaPegarCartasValido(mov,pilhaOrig,num,mj,pilha1) , validoColocavel = 0;
-    int norig = pilhaOrig->numCartasPilha
-        ,ndest = pilhaDest->numCartasPilha - 1;
-    if(validoPegavel){
-        validoColocavel = pilhaVaziaVerify(mj,pilha2,mov)
-            || verifyColocarCartas(mov,pilhaOrig->cartasPilha + norig - num,pilhaDest->cartasPilha + ndest);
+    int novoIndx = pilhaOrig->numCartasPilha - num
+        ,ndest = pilhaDest->numCartasPilha - 1,
+        max = mov->numMovs;
+    ArrayFlagsColocar * arrC = mov->arrC;
+    ArrayFlagsPegar * arrP = mov->arrP;
+    Boolean validaJogada = 0;
+    for(int i=0;i<max && arrC !=NULL && arrP !=NULL && validaJogada==0;i++,arrC++,arrP++){
+        validaJogada = verificaPegarCartasValido(arrP,pilhaOrig,num,mj,pilha1) 
+                                        && 
+            ( pilhaVaziaVerify(mj,pilha2,mov) 
+                || verifyColocarCartas(arrC,pilhaOrig->cartasPilha + novoIndx,pilhaDest->cartasPilha + ndest)
+            )
+        ;
     }
-    if(validoColocavel && validoPegavel) return valid;
+    if(validaJogada) return valid;
     else return invalid;
 }
 

@@ -14,7 +14,7 @@ typedef struct Carta{
 }Carta;
 
 typedef struct PilhaDeCartas{
-    long tagPilha;
+    unsigned long tagPilha;
     int numCartasPilha;
     struct Carta * cartasPilha;
 }PilhaDeCartas;
@@ -58,8 +58,8 @@ typedef struct FlagFuncArrayC{
 
 
 typedef struct MovimentoEntrePilhas{
-    long tagOrig; //Pilha de onde vem cas cartas
-    long tagDest; //Pilha onde vao parar as cartas
+    unsigned long tagOrig; //Pilha de onde vem cas cartas
+    unsigned long tagDest; //Pilha onde vao parar as cartas
     int numMovs; //Num de movs que ja foram feitos
     //Array de um struct que guarda as condicoes de pegar Cartas de uma dada pilha
     ArrayFlagsPegar * arrP;
@@ -70,7 +70,7 @@ typedef struct MovimentoEntrePilhas{
 
 
 typedef struct RegrasPilha{
-    long tag; //tag da pilha dada pela soma dos caracteres ASCII
+    unsigned long tag; //tag da pilha dada pela soma dos caracteres ASCII
     char * nomePilha;
     Boolean todaPilhaVisivel;
     Boolean cartaTopoVisivel;
@@ -117,8 +117,7 @@ typedef struct game{
 GameSettings initStructs(void);
 MatrizJogo initMatrizJogo(void);
 void inicializaAutoMoves(AutoMoves * am , int tagOrig , int tagDest);
-void initArrC(MovimentoEntrePilhas * mov);
-void initArrP(MovimentoEntrePilhas * mov);
+void initializeBothArrays(MovimentoEntrePilhas * mov);
 void headLinkedList(LastMoveLL * l , int indexAnterior, int indexNovo, int numCartasMovidas , MatrizJogo matriz);
 void initColunasMatriz(MatrizJogo * mj);
 
@@ -129,12 +128,12 @@ int readFiles(GameSettings * gs,MatrizJogo * mj);
 //Modulo simpleFunctions.c
 int valorCarta(int c);
 int exponenciacao(int base,int expo);
-char * criarTag(long * tag,char * line);
+char * criarTag(unsigned long * tag,char * line);
 int numCaracteres(char * line);
 int strToNumber(char * line);
 void calculaRulesPilha(RegrasPilha * rp , char * line);
-MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,long tagOrig , long tagDest , int n);
-long procuraTag(MatrizJogo * mj , int pilha);
+MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,unsigned long tagOrig ,unsigned long tagDest , int n);
+unsigned long procuraTag(MatrizJogo * mj , int pilha);
 char convertToNaipe(int div);
 int pertenceString(char c , char str[]);
 int pilhaVaziaVerify(MatrizJogo * mj , int pilhaDest , MovimentoEntrePilhas * mov);

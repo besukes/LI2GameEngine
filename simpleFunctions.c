@@ -15,7 +15,7 @@ int exponenciacao(int base,int expo){
     return ret;
 }
 
-char * criarTag(long * tag,char * line){
+char * criarTag(unsigned long * tag,char * line){
     int j=0;
     *tag = 0;
     while(*line != '#' && *line!='\n' && *line!=' ' && *line != '\0'){
@@ -74,19 +74,19 @@ void calculaRulesPilha(RegrasPilha * rp , char * line){
 }
 
 
-MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,long tagOrig , long tagDest , int n)
+MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,unsigned long tagOrig ,unsigned long tagDest , int n)
 {
     if(mp == NULL) return mp;
     for (int i = 0; i < n; i++) {
-        if (mp[i].tagOrig == tagOrig && mp[i].tagDest == tagDest) {
-            return &mp[i];
+        if ((mp+i)->tagOrig == tagOrig && (mp+i)->tagDest == tagDest) {
+            return (mp+i);
         }
     }
     return NULL;
 }
 
 
-long procuraTag(MatrizJogo * mj , int pilha){
+unsigned long procuraTag(MatrizJogo * mj , int pilha){
     if(pilha>mj->numLinhasMatriz) return -1;
     else return ((mj->linhasMatriz + pilha)->tagPilha);
 }
@@ -120,8 +120,8 @@ int pertenceString(char c , char str[]){
 
 int pilhaVaziaVerify(MatrizJogo * mj , int pilhaDest , MovimentoEntrePilhas * mov){
     int n = mj->numLinhasMatriz;
+    int pilhaValida = n > pilhaDest && n > 0 ;
     int colocaVazia = mov!=NULL && mov->colocaEmPilhaVazia != NULL ;
     int pilhaVazia = (mj->linhasMatriz + pilhaDest)->numCartasPilha == 0 ;
-    int pilhaValida = n > pilhaDest && n > 0 ;
     return(pilhaValida && pilhaVazia && colocaVazia);
 }

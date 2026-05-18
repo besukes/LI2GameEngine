@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 
-int initEVerificaTipoFlag(MovimentoEntrePilhas * mov , char * line){
-    char str1[9] = "+*[]mxcd" , str2[7]= "<>MXCD" , str3[5] = "aAkK";
+int verificaTipoFlag(MovimentoEntrePilhas * mov , char * line){
+    char str1[] = "+*[]mxcd" , str2[]= "<>MXCD" , str3[] = "aAkK";
     if(pertenceString(*line,str1)){
         return 1;
     }
@@ -36,12 +36,12 @@ void addMovInstruction(MovimentoEntrePilhas * mov,long tagDestino , char * line)
 
 void movInstruction(GameSettings * gs, char * line)
 {
-    long tagOrigem = 0 , tagDestino = 0;
+    unsigned long tagOrigem = 0 , tagDestino = 0;
     line = criarTag(&tagOrigem , line);
     line = criarTag(&tagDestino , line);
     int n = ++gs->jogo.numCondicoesMov;
     //Agora line aponta para as flags
-    MovimentoEntrePilhas * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,n);
+    MovimentoEntrePilhas * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,n-1);
     if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
         gs->jogo.movimentoPilhas = realloc(gs->jogo.movimentoPilhas,sizeof(struct MovimentoEntrePilhas)*n);
         existeregra = gs->jogo.movimentoPilhas + n - 1;
@@ -49,13 +49,15 @@ void movInstruction(GameSettings * gs, char * line)
         existeregra->tagOrig = tagOrigem;
         existeregra->tagDest = tagDestino;
         existeregra->colocaEmPilhaVazia = NULL;
+        existeregra->arrC = NULL;
+        existeregra->arrP = NULL;
     }
     addMovInstruction(existeregra,tagDestino,line);
 }
 
 void autoInstruction(GameSettings * gs, char * line)
 {
-    long tagOrigem =0 , tagDestino = 0;
+    unsigned long tagOrigem =0 , tagDestino = 0;
     line = criarTag(&tagOrigem , line);
     line = criarTag(&tagDestino , line);
     int n = ++gs->jogo.qntdAutoMoves;
@@ -68,6 +70,8 @@ void autoInstruction(GameSettings * gs, char * line)
         existeregra->tagOrig = tagOrigem;
         existeregra->tagDest = tagDestino;
         existeregra->colocaEmPilhaVazia = NULL;
+        existeregra->arrC = NULL;
+        existeregra->arrP = NULL;
     }
     addMovInstruction(existeregra,tagDestino,line);
 }
@@ -75,7 +79,7 @@ void autoInstruction(GameSettings * gs, char * line)
 void tipoInstruction(GameSettings * gs , char * line){
     int n = ++gs->jogo.numPilhas;
     gs->jogo.pilhas = realloc(gs->jogo.pilhas,sizeof(struct RegrasPilha)*n);
-    long tag=0;
+    unsigned long tag=0;
     char * nomeDaPilha = procuraNomeString(line);
     line = criarTag(&tag,line);
     RegrasPilha * pilhaAtual = gs->jogo.pilhas + n - 1;
@@ -85,7 +89,7 @@ void tipoInstruction(GameSettings * gs , char * line){
 }
 
 void initInstruction(GameSettings * gs , char * line,MatrizJogo * mj){
-    long insTag=0;
+    unsigned long insTag=0;
     int num = ++mj->numLinhasMatriz;
     line = criarTag(&insTag,line);
     mj->linhasMatriz = realloc(mj->linhasMatriz,sizeof(struct PilhaDeCartas)*num);
@@ -100,7 +104,7 @@ void winInstruction(GameSettings * gs , char * line){
     gs->numCondicoesVitoria++;
     int n = gs->numCondicoesVitoria , num = 0;
     gs->winCon = realloc(gs->winCon,sizeof(struct WinCondition)*gs->numCondicoesVitoria);
-    long tag = 0;
+    unsigned long tag = 0;
     line = criarTag(&tag,line);
     num = strToNumber(line);
     WinCondition * wn = gs->winCon ;

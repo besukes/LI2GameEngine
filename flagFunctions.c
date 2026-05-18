@@ -155,11 +155,8 @@ FlagFunctionsP flagColocavelCalcAux(char * line){
         case 'C' :
             return &mesmaCor ;
         break;
-        case 'D' :
-            return &diferentesCores;
-        break;
         default:
-            return NULL;
+            return &diferentesCores;
         break;
     }
 }
